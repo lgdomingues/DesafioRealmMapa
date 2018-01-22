@@ -7,13 +7,19 @@
 //
 
 import UIKit
+import MapKit
 
 class MapaViewController: UIViewController {
 
+    var latitude : Float = 0.0
+    var longitude : Float = 0.0
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+    
     }
 
     override func didReceiveMemoryWarning() {
@@ -21,7 +27,10 @@ class MapaViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-
+    @IBOutlet weak var mapa: MKMapView!
+    
+    
+    
     /*
     // MARK: - Navigation
 

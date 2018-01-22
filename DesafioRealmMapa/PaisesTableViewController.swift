@@ -12,7 +12,6 @@ import RealmSwift
 class PaisesTableViewController: UITableViewController {
 
     var quantidadePaises: Int = 0
-    var arrayPaises = [String: [[String:Any]]]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,15 +36,23 @@ class PaisesTableViewController: UITableViewController {
         return self.quantidadePaises
     }
 
-    /*
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
 
-        // Configure the cell...
-
+        // Resgatar o país do banco
+        let realm = try! Realm()
+        let paisesDB = realm.objects(Paises.self)
+        
+        var paises = [Paises]()
+        paises.append(contentsOf: paisesDB)
+        
+        let pais = paises[indexPath.row]
+        cell.textLabel?.text = pais.nome
+        
         return cell
     }
-    */
+    
 
     // MARK: - Métodos próprios
     func carregarPaises() {
@@ -66,13 +73,16 @@ class PaisesTableViewController: UITableViewController {
         
         let paisesDB = realm.objects(Paises.self)
         
+        self.quantidadePaises = paisesDB.count
+        
     }
     
     func carregarJason() {
                 
         let caminhoArquivo = Bundle.main.url(forResource: "paises", withExtension: "json")
         let paisesJson: Data = try! Data(contentsOf: caminhoArquivo!)
-        
+        var arrayPaises = [String: [[String:Any]]]()
+
         do {
             
             arrayPaises = try JSONSerialization.jsonObject(with: paisesJson, options: JSONSerialization.ReadingOptions.allowFragments) as! [String: [[String:Any]]]  
@@ -85,9 +95,7 @@ class PaisesTableViewController: UITableViewController {
         
         let realm = try! Realm()
 
-        self.quantidadePaises = arrayPaises["paises"]!.count
-        
-        for indicePais in 0..<self.quantidadePaises {
+        for indicePais in 0..<arrayPaises["paises"]!.count {
             
             let pais = arrayPaises["paises"]![indicePais]
             let paisPersist = Paises()
